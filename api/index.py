@@ -27,13 +27,13 @@ if api_key:
 def index():
     return render_template('index.html')
 
-@app.route('/史料速读')
+@app.route('/historical-materials')
 def historical_materials():
-    return render_template('史料速读.html')
+    return render_template('historical-materials.html')
 
-@app.route('/史料分析')
+@app.route('/historical-analysis')
 def historical_analysis():
-    return render_template('史料分析.html')
+    return render_template('historical-analysis.html')
 
 @app.route('/chat', methods=['POST'])
 def chat():

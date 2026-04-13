@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI素养融合备课助手</title>
+    <title>AI史料速读与关键信息提取</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,66 +86,47 @@
         .start-button:hover {
             background-color: #1976d2;
         }
-        .subject-dropdown {
-            padding: 12px 20px;
-            border: 2px solid #2196f3;
-            border-radius: 50px;
+        .back-button {
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 30px;
             font-size: 1em;
-            background-color: white;
-            color: #333;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
         }
-        .subject-dropdown:hover {
-            border-color: #1976d2;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .subject-dropdown:focus {
-            outline: none;
-            border-color: #1976d2;
-            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        .back-button:hover {
+            background-color: #1976d2;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>AI素养融合备课助手</h1>
-        <p class="description">帮助老师将AI素养自然融入历史、生物、语文等课堂，快速生成可直接使用的教学方案。</p>
+        <button class="back-button" onclick="window.location.href='/'">← 返回</button>
+        <h1>AI史料速读与关键信息提取</h1>
+        <p class="description">学生阅读原始史料(文言文/外文/长文献)，用AI提炼:时间、人物、核心主张背景信息;再对比自己总结，训练信息筛选与证据意识。</p>
         
         <div class="features">
             <div class="feature-card">
-                <div class="icon">📚</div>
-                <h3 class="feature-title">学科融合</h3>
-                <p class="feature-description">将AI素养嵌入现有课堂，而不是额外增加一门新课</p>
+                <div class="icon">📜</div>
+                <h3 class="feature-title">史料分析</h3>
+                <p class="feature-description">自动提取史料中的时间、人物、核心主张等关键信息</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔍</div>
+                <h3 class="feature-title">对比训练</h3>
+                <p class="feature-description">对比AI分析与个人总结，提升信息筛选能力</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🧠</div>
-                <h3 class="feature-title">思辨培养</h3>
-                <p class="feature-description">引导学生判断AI内容是否可信，学会验证信息与独立思考</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">⚡</div>
-                <h3 class="feature-title">即插即用</h3>
-                <p class="feature-description">提供完整教案与教师脚本，降低备课难度</p>
+                <h3 class="feature-title">证据意识</h3>
+                <p class="feature-description">培养基于证据的历史思维与批判性思考</p>
             </div>
         </div>
         
-        <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
-            <select class="subject-dropdown" id="subject-select">
-                <option value="语文">语文</option>
-                <option value="数学">数学</option>
-                <option value="外语">外语</option>
-                <option value="历史">历史</option>
-                <option value="地理">地理</option>
-                <option value="生物">生物</option>
-                <option value="物理">物理</option>
-                <option value="化学">化学</option>
-            </select>
-            <select class="subject-dropdown" id="history-tool-select" disabled>
-                <option value="">请选择功能</option>
-            </select>
-            <button class="start-button" onclick="navigateToNextPage()">开始生成教学方案</button>
-        </div>
+        <button class="start-button" onclick="window.location.href='/historical-analysis'">开始分析史料</button>
     </div>
     
     <!-- 折叠式聊天框 -->
@@ -157,7 +138,7 @@
         <div class="chat-body" id="chat-body">
             <div class="chat-messages" id="chat-messages">
                 <div class="bot-message">
-                    <p>你好！我是AI备课助手，有什么可以帮助你的吗？</p>
+                    <p>你好！我是史料分析助手，有什么可以帮助你的吗？</p>
                 </div>
             </div>
             <div class="chat-input-area">
@@ -215,7 +196,7 @@
                 <div class="bot-message loading" id="${loadingId}">
                     <div class="loading-content">
                         <span class="hourglass"></span>
-                        <span>正在生成回复...</span>
+                        <span>正在分析史料...</span>
                     </div>
                 </div>
             `;
@@ -269,54 +250,6 @@
                 sendMessage();
             }
         });
-        
-        // 历史学科工具选项
-        const historyTools = [
-            { value: "", text: "请选择功能" },
-            { value: "key-info", text: "AI史料关键信息提取" },
-            { value: "cross-reference", text: "AI辅助史料互证" },
-            { value: "fake-detection", text: "AI伪造历史信息辨别" },
-            { value: "scene-reconstruction", text: "AI历史场景还原" },
-            { value: "what-if", text: "AI历史'假如'推演" },
-            { value: "timeline", text: "AI时间线共建" },
-            { value: "bias-detection", text: "AI立场识别与偏见检测" }
-        ];
-        
-        // 监听学科选择变化
-        document.getElementById('subject-select').addEventListener('change', function() {
-            const selectedSubject = this.value;
-            const historyToolSelect = document.getElementById('history-tool-select');
-            
-            if (selectedSubject === '历史') {
-                // 启用历史工具选择
-                historyToolSelect.disabled = false;
-                // 清空并添加历史工具选项
-                historyToolSelect.innerHTML = '';
-                historyTools.forEach(tool => {
-                    const option = document.createElement('option');
-                    option.value = tool.value;
-                    option.textContent = tool.text;
-                    historyToolSelect.appendChild(option);
-                });
-            } else {
-                // 禁用并重置历史工具选择
-                historyToolSelect.disabled = true;
-                historyToolSelect.innerHTML = '<option value="">请选择功能</option>';
-            }
-        });
-        
-        // 导航到下一页
-        function navigateToNextPage() {
-            const selectedSubject = document.getElementById('subject-select').value;
-            const selectedTool = document.getElementById('history-tool-select').value;
-            
-            if (selectedSubject === '历史' && selectedTool === 'key-info') {
-                window.location.href = '/historical-materials';
-            } else {
-                // 显示功能正在开发中的提示框
-                alert('功能开发中');
-            }
-        }
     </script>
     
     <style>
