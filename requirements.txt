@@ -1,3 +1,5 @@
 flask
 python-dotenv
-openai
+asyncio
+volcengine-python-sdk[ark]
+volcengine
