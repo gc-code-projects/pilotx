@@ -10,7 +10,6 @@ app = Flask(__name__, template_folder="../templates")
 # Global initialization
 # =========================
 api_key = os.getenv("LLM_API_KEY")
-api_key = "30ff248b-26c0-4be1-832d-6475064748ab"
 MODEL = "doubao-seed-2-0-mini-260215"
 
 client = None
