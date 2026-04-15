@@ -16,7 +16,7 @@ MODEL = "doubao-seed-2-0-mini-260215"
 client = None
 if api_key:
     client = Ark(
-        base_url='https://ark.cn-beijing.volces.com/api/v3',
+        base_url='https://ark.volces.com/api/v3',
         api_key=api_key,
     )
 
@@ -149,7 +149,7 @@ def analyze_pdf(file_path, task):
     async def run():
         try:
             async_client = AsyncArk(
-                base_url='https://ark.cn-beijing.volces.com/api/v3',
+                base_url='https://ark.volces.com/api/v3',
                 api_key=api_key
             )
 
