@@ -46,32 +46,34 @@ def time_travel_scenario():
 @app.route('/quiz')
 def quiz():
     return render_template('quiz.html')
-
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
         data = request.json
         prompt = data.get('message', '')
-        
+
         if not client:
-            return jsonify({'response': '抱歉，AI服务暂时不可用。请联系管理员设置API密钥。'})
-        
+            return jsonify({'response': 'AI服务不可用，请检查API Key'})
+
         response = client.responses.create(
             model=MODEL,
-            input=prompt, # Replace with your prompt
-            # thinking={"type": "disabled"}, #  Manually disable deep thinking
+            input=prompt,
         )
-        
-        return jsonify({'response': response.output[1].content[0].text})
+
+        return jsonify({
+            'response': response.output[1].content[0].text
+        })
+
     except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({'response': f'抱歉，处理您的请求时发生错误：{str(e)}'})
+        return jsonify({'response': f'错误: {str(e)}'})
 
 
+# =========================
+# Upload (single PDF)
+# =========================
 @app.route('/upload', methods=['POST'])
 def upload():
     try:
-        # 1. 校验文件是否存在
         if 'file' not in request.files:
             return jsonify({"message": "No file part"}), 400
 
@@ -79,137 +81,106 @@ def upload():
         if file.filename == '':
             return jsonify({"message": "No selected file"}), 400
 
-        # 2. 只允许PDF
         if not file.filename.lower().endswith('.pdf'):
             return jsonify({"message": "请上传 PDF 文件"}), 400
 
-        # 3. 保存文件到本地
-        uploads_dir = os.path.join(app.root_path, "uploads")
-        os.makedirs(uploads_dir, exist_ok=True)
+        # ⚠️ Vercel: use /tmp (writable)
+        uploads_dir = "/tmp"
         file_path = os.path.join(uploads_dir, file.filename)
         file.save(file_path)
 
-        # 4. 调用豆包分析 PDF
         analysis = analyze_pdf(file_path, "请分析这个PDF文件")
 
         return jsonify({
-            "message": f"文件 {file.filename} 上传并分析成功",
+            "message": f"{file.filename} 上传并分析成功",
             "ai_analysis": analysis
         })
 
     except Exception as e:
-        return jsonify({"error": f"服务器错误：{str(e)}"}), 500
+        return jsonify({"error": str(e)}), 500
 
+
+# =========================
+# Upload (multiple PDFs)
+# =========================
 @app.route('/analyze', methods=['POST'])
 def analyze():
     try:
-        # 1. 校验文件是否存在
         if 'file' not in request.files:
             return jsonify({"message": "No file part"}), 400
 
-        # 2. 获取所有文件 (支持多个文件)
         files = request.files.getlist('file')
-        if not files:
-            return jsonify({"message": "No selected files"}), 400
+        task = request.form.get('task', '请分析这些PDF文件')
 
-        # 3. 只允许PDF
+        results = []
+
         for file in files:
             if not file.filename.lower().endswith('.pdf'):
                 return jsonify({"message": "请上传 PDF 文件"}), 400
 
-        # 4. 获取任务描述
-        task = request.form.get('task', '请分析这个PDF文件')
-
-        # 5. 保存文件到本地并分析
-        uploads_dir = os.path.join(app.root_path, "uploads")
-        os.makedirs(uploads_dir, exist_ok=True)
-
-        analysis_results = []
-        for file in files:
-            file_path = os.path.join(uploads_dir, file.filename)
+            file_path = os.path.join("/tmp", file.filename)
             file.save(file_path)
-            
-            # 调用豆包分析 PDF
+
             analysis = analyze_pdf(file_path, task)
 
-            analysis_results.append({
+            results.append({
                 "filename": file.filename,
                 "analysis": analysis
             })
 
-        # 生成综合分析结果
-        combined_analysis = """
-# PDF文件分析结果
-
-"""
-        for result in analysis_results:
-            combined_analysis += f"## {result['filename']}\n{result['analysis']}\n\n"
+        combined = "# PDF分析结果\n\n"
+        for r in results:
+            combined += f"## {r['filename']}\n{r['analysis']}\n\n"
 
         return jsonify({
             "message": f"{len(files)} 个文件分析完成",
-            "ai_analysis": combined_analysis
+            "ai_analysis": combined
         })
 
     except Exception as e:
-        return jsonify({"error": f"服务器错误：{str(e)}"}), 500
+        return jsonify({"error": str(e)}), 500
 
-def analyze_pdf(file_path, task="请分析这个PDF文件"):
-    async def analyze_async():
+
+# =========================
+# PDF Analysis (ASYNC)
+# =========================
+def analyze_pdf(file_path, task):
+    async def run():
         try:
-            # Create AsyncArk client
             async_client = AsyncArk(
                 base_url='https://ark.cn-beijing.volces.com/api/v3',
                 api_key=api_key
             )
-            
-            # Upload PDF file
-            print("Uploading PDF file...")
+
+            # Upload
             with open(file_path, "rb") as f:
                 file = await async_client.files.create(
                     file=f,
                     purpose="user_data"
                 )
-            print(f"File uploaded: {file.id}")
-            
-            # Wait for the file to finish processing
-            print("Waiting for file processing...")
+
             await async_client.files.wait_for_processing(file.id)
-            print(f"File processed: {file.id}")
-            
-            # Create response with the file and task
+
             response = await async_client.responses.create(
                 model=MODEL,
-                input=[
-                    {
-                        "role": "user", 
-                        "content": [
-                            {
-                                "type": "input_file",
-                                "file_id": file.id  # ref pdf file id
-                            },
-                            {
-                                "type": "input_text",
-                                "text": task
-                            }
-                        ]
-                    },
-                ],
+                input=[{
+                    "role": "user",
+                    "content": [
+                        {"type": "input_file", "file_id": file.id},
+                        {"type": "input_text", "text": task}
+                    ]
+                }]
             )
-            
-            # Extract and return the analysis result
-            if response and response.output and len(response.output) > 1:
-                analysis_content = response.output[1].content[0].text
-                return analysis_content
-            else:
-                return "分析完成，但未获取到分析结果。"
-                
+
+            if response and len(response.output) > 1:
+                return response.output[1].content[0].text
+
+            return "未获取到分析结果"
+
         except Exception as e:
-            print(f"Error during PDF analysis: {e}")
-            return f"分析过程中发生错误: {str(e)}"
-    
-    # Run the async function
-    return asyncio.run(analyze_async())
-    
+            return f"分析错误: {str(e)}"
+
+    return asyncio.run(run())
 
 
 # =========================
