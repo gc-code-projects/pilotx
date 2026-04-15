@@ -180,11 +180,8 @@ def analyze_pdf(file_path, task):
         except Exception as e:
             return f"分析错误: {str(e)}"
 
-    return asyncio.run(run())
+    # return asyncio.run(run())
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    return loop.run_until_complete(run())
 
-
-# =========================
-# 👇 Vercel entrypoint
-# =========================
-def handler(request, *args, **kwargs):
-    return app(request.environ, lambda *args: None)
