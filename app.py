@@ -18,6 +18,18 @@ def historical_materials():
 def historical_analysis():
     return render_template('historical-analysis.html')
 
+@app.route('/time-travel')
+def time_travel():
+    return render_template('time-travel.html')
+
+@app.route('/time-travel-scenario')
+def time_travel_scenario():
+    return render_template('time-travel-scenario.html')
+
+@app.route('/quiz')
+def quiz():
+    return render_template('quiz.html')
+
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
@@ -102,6 +114,7 @@ def analyze():
             
             # 调用豆包分析 PDF
             analysis = analyze_pdf(file_path, task)
+
             analysis_results.append({
                 "filename": file.filename,
                 "analysis": analysis

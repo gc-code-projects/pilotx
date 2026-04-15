@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI素养融合备课助手</title>
+    <title>AI穿越指南</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -54,18 +54,14 @@
         .icon {
             width: 60px;
             height: 60px;
-            background-color: #e3f2fd;
-            border-radius: 50%;
+            margin: 0 auto 20px;
+            font-size: 2em;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.5em;
-            color: #2196f3;
         }
         .feature-title {
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1.3em;
             margin-bottom: 15px;
             color: #333;
         }
@@ -86,78 +82,61 @@
         .start-button:hover {
             background-color: #1976d2;
         }
-        .subject-dropdown {
-            padding: 12px 20px;
-            border: 2px solid #2196f3;
-            border-radius: 50px;
-            font-size: 1em;
-            background-color: white;
-            color: #333;
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
         }
-        .subject-dropdown:hover {
-            border-color: #1976d2;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .subject-dropdown:focus {
-            outline: none;
-            border-color: #1976d2;
-            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        .back-button:hover {
+            background-color: #1976d2;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>AI素养融合备课助手</h1>
-        <p class="description">帮助老师将AI素养自然融入历史、生物、语文等课堂，快速生成可直接使用的教学方案。</p>
+        <button class="back-button" onclick="window.location.href='/'">← 返回</button>
+        <h1>AI穿越指南</h1>
+        <p class="description">作为一个现代人，你被指派到古代完成某项任务，你需要用上符合当时情况的历史知识。</p>
         
         <div class="features">
             <div class="feature-card">
-                <div class="icon">📚</div>
-                <h3 class="feature-title">学科融合</h3>
-                <p class="feature-description">将AI素养嵌入现有课堂，而不是额外增加一门新课</p>
+                <div class="icon">🕰️</div>
+                <h3 class="feature-title">背景知识</h3>
+                <p class="feature-description">了解目标时代的相关任务的历史背景，为穿越作好准备</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">👔</div>
+                <h3 class="feature-title">互动问答</h3>
+                <p class="feature-description">AI生成问答内容，帮助学生学以致用</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🧠</div>
-                <h3 class="feature-title">思辨培养</h3>
-                <p class="feature-description">引导学生判断AI内容是否可信，学会验证信息与独立思考</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">⚡</div>
-                <h3 class="feature-title">即插即用</h3>
-                <p class="feature-description">提供完整教案与教师脚本，降低备课难度</p>
+                <h3 class="feature-title">场景设定</h3>
+                <p class="feature-description">AI问答可嵌入某特定场景，提供沉浸式学习体验</p>
             </div>
         </div>
         
-        <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
-            <select class="subject-dropdown" id="subject-select">
-                <option value="语文">语文</option>
-                <option value="数学">数学</option>
-                <option value="外语">外语</option>
-                <option value="历史">历史</option>
-                <option value="地理">地理</option>
-                <option value="生物">生物</option>
-                <option value="物理">物理</option>
-                <option value="化学">化学</option>
-            </select>
-            <select class="subject-dropdown" id="history-tool-select" disabled>
-                <option value="">请选择功能</option>
-            </select>
-            <button class="start-button" onclick="navigateToNextPage()">开始生成教学方案</button>
-        </div>
+        <button class="start-button" onclick="window.location.href='/time-travel-scenario'">开始穿越</button>
     </div>
     
     <!-- 折叠式聊天框 -->
     <div class="chat-container">
         <div class="chat-header" id="chat-header">
             <span>AI助手</span>
-            <button id="chat-toggle">▼</button>
+            <button id="chat-toggle">▶</button>
         </div>
-        <div class="chat-body" id="chat-body">
+        <div class="chat-body chat-body-hidden" id="chat-body">
             <div class="chat-messages" id="chat-messages">
                 <div class="bot-message">
-                    <p>你好！我是AI备课助手，有什么可以帮助你的吗？</p>
+                    <p>你好！我是穿越指南助手，有什么可以帮助你的吗？</p>
                 </div>
             </div>
             <div class="chat-input-area">
@@ -215,7 +194,7 @@
                 <div class="bot-message loading" id="${loadingId}">
                     <div class="loading-content">
                         <span class="hourglass"></span>
-                        <span>正在生成回复...</span>
+                        <span>正在分析...</span>
                     </div>
                 </div>
             `;
@@ -269,57 +248,6 @@
                 sendMessage();
             }
         });
-        
-        // 历史学科工具选项
-        const historyTools = [
-            { value: "", text: "请选择功能" },
-            { value: "key-info", text: "AI史料速读" },
-            { value: "time-travel", text: "AI穿越指南" },
-            { value: "cross-reference", text: "AI辅助史料互证" },
-            { value: "fake-detection", text: "AI伪造历史信息辨别" },
-            { value: "scene-reconstruction", text: "AI历史场景还原" },
-            { value: "what-if", text: "AI历史'假如'推演" },
-            { value: "timeline", text: "AI时间线共建" },
-            { value: "bias-detection", text: "AI立场识别与偏见检测" }
-        ];
-        
-        // 监听学科选择变化
-        document.getElementById('subject-select').addEventListener('change', function() {
-            const selectedSubject = this.value;
-            const historyToolSelect = document.getElementById('history-tool-select');
-            
-            if (selectedSubject === '历史') {
-                // 启用历史工具选择
-                historyToolSelect.disabled = false;
-                // 清空并添加历史工具选项
-                historyToolSelect.innerHTML = '';
-                historyTools.forEach(tool => {
-                    const option = document.createElement('option');
-                    option.value = tool.value;
-                    option.textContent = tool.text;
-                    historyToolSelect.appendChild(option);
-                });
-            } else {
-                // 禁用并重置历史工具选择
-                historyToolSelect.disabled = true;
-                historyToolSelect.innerHTML = '<option value="">请选择功能</option>';
-            }
-        });
-        
-        // 导航到下一页
-        function navigateToNextPage() {
-            const selectedSubject = document.getElementById('subject-select').value;
-            const selectedTool = document.getElementById('history-tool-select').value;
-            
-            if (selectedSubject === '历史' && selectedTool === 'key-info') {
-                window.location.href = '/historical-materials';
-            } else if (selectedSubject === '历史' && selectedTool === 'time-travel') {
-                window.location.href = '/time-travel';
-            } else {
-                // 显示功能正在开发中的提示框
-                alert('功能开发中');
-            }
-        }
     </script>
     
     <style>
@@ -460,30 +388,15 @@
         .chat-input {
             display: flex;
             padding: 10px;
-            border-top: 1px solid #e0e0e0;
+            align-items: center;
         }
         
         .chat-input input {
             flex: 1;
-            padding: 10px;
+            padding: 10px 15px;
             border: 1px solid #e0e0e0;
             border-radius: 20px;
             margin-right: 10px;
-        }
-        
-        #upload-button {
-            background-color: #f1f1f1;
-            color: #666;
-            border: none;
-            padding: 0 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-right: 5px;
-            font-size: 16px;
-        }
-        
-        #upload-button:hover {
-            background-color: #e0e0e0;
         }
         
         #send-button {
