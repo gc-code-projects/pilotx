@@ -4,7 +4,8 @@ import asyncio
 from volcenginesdkarkruntime import Ark, AsyncArk
 
 # 👇 IMPORTANT: point to templates folder correctly
-app = Flask(__name__, template_folder="../templates")
+# app = Flask(__name__, template_folder="../templates")
+app = Flask(__name__)
 
 # =========================
 # Global initialization
