@@ -208,7 +208,10 @@ def analyze_pdf(file_path, task="请分析这个PDF文件"):
             return f"分析过程中发生错误: {str(e)}"
     
     # Run the async function
-    return asyncio.run(analyze_async())
+    # return asyncio.run(analyze_async())
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    return loop.run_until_complete(analyze_async())
 
 # =========================
 # 👇 Vercel entrypoint
