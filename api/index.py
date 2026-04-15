@@ -84,13 +84,9 @@ def upload():
             return jsonify({"message": "请上传 PDF 文件"}), 400
 
         # 3. 保存文件到本地
-        uploads_dir = os.path.join(app.root_path, "uploads")
-        os.makedirs(uploads_dir, exist_ok=True)
-        file_path = os.path.join(uploads_dir, file.filename)
-        file.save(file_path)
 
         # 4. 调用豆包分析 PDF
-        analysis = analyze_pdf(file_path, "请分析这个PDF文件")
+        analysis = analyze_pdf(file, "请分析这个PDF文件")
 
         return jsonify({
             "message": f"文件 {file.filename} 上传并分析成功",
@@ -153,62 +149,47 @@ def analyze():
     except Exception as e:
         return jsonify({"error": f"服务器错误：{str(e)}"}), 500
 
-def analyze_pdf(file_path, task="请分析这个PDF文件"):
+def analyze_pdf(file, task):
     async def analyze_async():
         try:
-            # Create AsyncArk client
             async_client = AsyncArk(
                 base_url='https://ark.cn-beijing.volces.com/api/v3',
                 api_key=api_key
             )
-            
-            # Upload PDF file
-            print("Uploading PDF file...")
-            with open(file_path, "rb") as f:
-                file = await async_client.files.create(
-                    file=f,
-                    purpose="user_data"
-                )
-            print(f"File uploaded: {file.id}")
-            
-            # Wait for the file to finish processing
-            print("Waiting for file processing...")
-            await async_client.files.wait_for_processing(file.id)
-            print(f"File processed: {file.id}")
-            
-            # Create response with the file and task
+
+            # 👇 directly use file stream (NO DISK)
+            uploaded = await async_client.files.create(
+                file=file.stream,
+                purpose="user_data"
+            )
+
+            await async_client.files.wait_for_processing(uploaded.id)
+
             response = await async_client.responses.create(
                 model=MODEL,
                 input=[
                     {
-                        "role": "user", 
+                        "role": "user",
                         "content": [
-                            {
-                                "type": "input_file",
-                                "file_id": file.id  # ref pdf file id
-                            },
-                            {
-                                "type": "input_text",
-                                "text": task
-                            }
+                            {"type": "input_file", "file_id": uploaded.id},
+                            {"type": "input_text", "text": task}
                         ]
-                    },
+                    }
                 ],
             )
-            
-            # Extract and return the analysis result
+
             if response and response.output and len(response.output) > 1:
-                analysis_content = response.output[1].content[0].text
-                return analysis_content
+                return response.output[1].content[0].text
             else:
                 return "分析完成，但未获取到分析结果。"
-                
+
         except Exception as e:
-            print(f"Error during PDF analysis: {e}")
             return f"分析过程中发生错误: {str(e)}"
-    
-    # Run the async function
-    return asyncio.run(analyze_async())
+
+    # ⚠️ safer for serverless
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    return loop.run_until_complete(analyze_async())
     
 
 
