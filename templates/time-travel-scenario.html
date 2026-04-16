@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>穿越场景分析</title>
+    <title>穿越场景生成</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -103,13 +103,13 @@
 <body>
     <div class="container">
         <button class="back-button" onclick="window.location.href='/time-travel'">← 返回</button>
-        <h1>穿越场景分析</h1>
+        <h1>穿越场景生成</h1>
         
         <div class="analysis-container">
             <div class="scenario-column">
                 <div class="scenario-placeholder" id="scenario-placeholder">
                     <div class="icon">🕰️</div>
-                    <p>请在AI助手中设定穿越场景</p>
+                    <p>请在AI助手中上传参考文献并描述穿越场景</p>
                 </div>
                 <div class="scenario-content" id="scenario-content">
                 </div>
@@ -538,34 +538,8 @@
         
         // 下载问题按钮
         document.getElementById('download-quiz').addEventListener('click', function() {
-            let questionsToDownload = parsedQuestions;
-            
-            // 如果parsedQuestions不存在，尝试从sessionStorage获取
-            if (!questionsToDownload) {
-                try {
-                    const savedData = sessionStorage.getItem('parsedQuestions');
-                    if (savedData) {
-                        questionsToDownload = JSON.parse(savedData);
-                    }
-                } catch (e) {
-                    console.error('Error loading from sessionStorage:', e);
-                }
-            }
-            
-            if (questionsToDownload) {
-                const jsonStr = JSON.stringify(questionsToDownload, null, 2);
-                const blob = new Blob([jsonStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'quiz-data.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            } else {
-                alert('没有可下载的问题数据');
-            }
+            // 重定向到下载路由
+            window.location.href = '/download-quiz';
         });
         
         // 前往答题页面
