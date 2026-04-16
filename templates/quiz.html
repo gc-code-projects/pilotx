@@ -25,6 +25,11 @@
 <body>
     <div class="container">
         <button class="back-button" onclick="window.location.href='/time-travel-scenario'">← 返回</button>
+        <div style="display: flex; gap: 10px; margin: 10px 0;">
+            <button onclick="downloadQuiz()" style="background-color: #2196f3; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">下载题目</button>
+            <button onclick="document.getElementById('file-input').click()" style="background-color: #ff9800; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">上传题目</button>
+            <input type="file" id="file-input" accept=".json" style="display: none;">
+        </div>
         
         <div class="quiz-container">
             <h1>穿越知识测验</h1>
@@ -135,6 +140,53 @@
             document.getElementById('progress').style.display = 'block';
             document.getElementById('submit-btn').style.display = 'block';
         }
+
+        // 下载题目
+        function downloadQuiz() {
+            if (quizData.length > 0) {
+                const jsonStr = JSON.stringify(quizData, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'quiz-data.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                alert('没有可下载的题目数据');
+            }
+        }
+
+        // 上传题目
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const uploadedData = JSON.parse(event.target.result);
+                        // 验证数据格式
+                        if (Array.isArray(uploadedData) && uploadedData.every(item => 
+                            item.question && Array.isArray(item.options) && typeof item.answer === 'number'
+                        )) {
+                            quizData = uploadedData;
+                            currentQuestionIndex = 0;
+                            userAnswers = [];
+                            renderCurrentQuestion();
+                            alert('题目上传成功！');
+                        } else {
+                            alert('无效的题目数据格式');
+                        }
+                    } catch (e) {
+                        alert('解析JSON文件失败');
+                        console.error('Error parsing JSON:', e);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
 
         document.getElementById('submit-btn').addEventListener('click', () => {
             const selected = document.querySelector(`input[name="question"]:checked`);
