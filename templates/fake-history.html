@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI伪史之火眼金睛</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .description {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 50px;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 300px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .feature-description {
+            color: #666;
+            line-height: 1.5;
+        }
+        .start-button {
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background-color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI伪史之火眼金睛</h1>
+        <p class="description">
+            利用AI技术，帮助你识别和分析历史资料中的真伪，练就火眼金睛，洞察历史的真相。
+            通过上传历史文献、图片等资料，AI将帮助你分析其中可能存在的虚构、夸大或错误信息。
+        </p>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>史料真伪分析</h3>
+                <p class="feature-description">
+                    上传历史文献，AI将分析其中的内容，识别可能的虚构或夸大成分，帮助你辨别史料的真实性。
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📸</div>
+                <h3>历史图片鉴定</h3>
+                <p class="feature-description">
+                    上传历史图片，AI将分析图片的真实性，识别可能的伪造或篡改，帮助你了解图片背后的真相。
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>多源交叉验证</h3>
+                <p class="feature-description">
+                    提供多份历史资料，AI将进行交叉验证，帮助你发现不同资料之间的矛盾和一致性，形成更全面的历史认知。
+                </p>
+            </div>
+        </div>
+        
+        <button class="start-button" onclick="window.location.href='/fake-history-scenario'">
+            开始分析 →
+        </button>
+    </div>
+</body>
+</html>

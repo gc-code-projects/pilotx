@@ -275,8 +275,8 @@
             { value: "", text: "请选择功能" },
             { value: "key-info", text: "AI史料速读" },
             { value: "time-travel", text: "AI穿越指南" },
+            { value: "fake-detection", text: "AI伪史之火眼金睛" },
             { value: "cross-reference", text: "AI辅助史料互证" },
-            { value: "fake-detection", text: "AI伪造历史信息辨别" },
             { value: "scene-reconstruction", text: "AI历史场景还原" },
             { value: "what-if", text: "AI历史'假如'推演" },
             { value: "timeline", text: "AI时间线共建" },
@@ -315,6 +315,8 @@
                 window.location.href = '/historical-materials';
             } else if (selectedSubject === '历史' && selectedTool === 'time-travel') {
                 window.location.href = '/time-travel';
+            } else if (selectedSubject === '历史' && selectedTool === 'fake-detection') {
+                window.location.href = '/fake-history';
             } else {
                 // 显示功能正在开发中的提示框
                 alert('功能开发中');
