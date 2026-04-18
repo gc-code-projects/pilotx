@@ -42,6 +42,14 @@ def time_travel():
 def time_travel_scenario():
     return render_template('time-travel-scenario.html')
 
+@app.route('/fake-history')
+def fake_history():
+    return render_template('fake-history.html')
+
+@app.route('/fake-history-scenario')
+def fake_history_scenario():
+    return render_template('fake-history-scenario.html')
+    
 @app.route('/quiz')
 def quiz():
     return render_template('quiz.html')
@@ -191,6 +199,40 @@ def analyze_pdf(file_path, task):
     asyncio.set_event_loop(loop)
     return loop.run_until_complete(run())
 
+@app.route('/generate-image', methods=['POST'])
+def generate_image():
+    try:
+        data = request.json
+        prompt = data.get('prompt', '')
+        
+        if not prompt:
+            return jsonify({"error": "请提供图片生成描述"}), 400
+        
+        if not api_key:
+            return jsonify({"error": "API密钥未配置"}), 500
+        
+        # 创建OpenAI客户端
+        client = OpenAI(
+            base_url="https://ark.cn-beijing.volces.com/api/v3",
+            api_key=api_key
+        )
+        
+        # 生成图片
+        resp = client.images.generate(
+            prompt=prompt,
+            model="doubao-seedream-5-0-260128",
+            response_format="url",
+            size="2K",
+        )
+        
+        url = resp.data[0].url
+        
+        return jsonify({"url": url})
+        
+    except Exception as e:
+        print(f"Error generating image: {e}")
+        return jsonify({"error": f"生成图片时发生错误：{str(e)}"}), 500
+        
 # =========================
 # Vercel entrypoint
 # =========================
