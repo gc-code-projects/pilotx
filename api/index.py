@@ -3,6 +3,7 @@ import os
 import asyncio
 import json
 from volcenginesdkarkruntime import Ark, AsyncArk
+from openai import OpenAI
 
 app = Flask(__name__, template_folder="../templates")
 
