@@ -98,6 +98,89 @@
         .back-button:hover {
             background-color: #1976d2;
         }
+        /* 标签页样式 */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 40px auto 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 20px 20px 0 0;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background-color: #2196f3;
+            color: white;
+            font-weight: bold;
+        }
+        .tab:hover {
+            background-color: #e0e0e0;
+        }
+        .tab.active:hover {
+            background-color: #1976d2;
+        }
+        .tab-content {
+            display: none;
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0 auto 40px;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-content h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2196f3;
+            padding-bottom: 10px;
+        }
+        .tab-content p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        .tab-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .tab-content li {
+            margin-bottom: 8px;
+            color: #666;
+        }
+        /* 下载链接样式 */
+        .download-link {
+            color: #2196f3;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .download-link:hover {
+            background-color: #e3f2fd;
+            text-decoration: underline;
+        }
+        .download-link:before {
+            content: "📥 ";
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -123,6 +206,78 @@
                 <p class="feature-description">AI问答可嵌入某特定场景，提供沉浸式学习体验</p>
             </div>
         </div>
+        
+        <!-- 标签页 -->
+        <div class="tabs">
+            <button class="tab active" onclick="openTab('about')">关于</button>
+            <button class="tab" onclick="openTab('materials')">素材库</button>
+            <button class="tab" onclick="openTab('thanks')">致谢</button>
+        </div>
+        
+        <div id="about" class="tab-content active">
+            <h3>关于AI穿越指南</h3>
+            <p>AI穿越指南是一个利用人工智能技术帮助学生了解历史背景和培养历史思维的工具。我们的目标是通过沉浸式的历史场景体验，帮助学生更好地理解历史知识。</p>
+            <p>本工具可以：</p>
+            <ul>
+                <li>提供目标时代的相关历史背景知识</li>
+                <li>生成互动问答内容，帮助学生学以致用</li>
+                <li>创建特定历史场景，提供沉浸式学习体验</li>
+            </ul>
+            <p>我们希望通过这个工具，帮助学生更加生动地学习历史，培养历史思维能力和文化素养。</p>
+        </div>
+        
+        <div id="materials" class="tab-content">
+            <h3>素材库</h3>
+            <p>我们提供了一些教师共建的教学资料供用户分析和参考：</p>
+            
+            <h4>历史文献</h4>
+            <p>包含各个时期的历史文献，如史记、资治通鉴等经典著作的电子版：</p>
+            <ul>
+                <li>史记选段 <a href="#" class="download-link">史记选段.pdf</a></li>
+                <li>唐代到明代的婚姻与婚服 <a href="#" class="download-link">唐代到明代的婚姻与婚服.docx</a></li>
+                <li>宋代婚俗 <a href="#" class="download-link">宋代婚俗.pptx</a></li>
+            </ul>
+            
+            <h4>课堂活动和课程资源</h4>
+            <p>相关的课堂活动流程，课件等：</p>
+            <ul>
+                <li>三国隆中对策 <a href="#" class="download-link">隆中对策课件.pdf</a></li>
+                <li>宋代婚俗 <a href="#" class="download-link">宋代活动ppt+课程总结页.pptx</a></li>
+            </ul>
+            
+            <p>用户可以从素材库中选择资料，也可以自己进行分析创建。</p>
+        </div>
+        
+        <div id="thanks" class="tab-content">
+            <h3>致谢</h3>
+            <p>我们感谢以下机构和个人对本项目的支持：</p>
+            <ul>
+                <li>贵州黔西南布依族苗族自治州贞丰县第二中学 王莎老师</li>
+                <li>剑桥大学PilotX项目组</li>
+                <li>所有参与本项目开发和测试的人员</li>
+            </ul>
+            <p>特别感谢所有用户的反馈和建议，你们的支持是我们不断改进的动力。</p>
+        </div>
+        
+        <script>
+            function openTab(tabName) {
+                // 隐藏所有标签内容
+                const tabContents = document.getElementsByClassName("tab-content");
+                for (let i = 0; i < tabContents.length; i++) {
+                    tabContents[i].classList.remove("active");
+                }
+                
+                // 移除所有标签的active类
+                const tabs = document.getElementsByClassName("tab");
+                for (let i = 0; i < tabs.length; i++) {
+                    tabs[i].classList.remove("active");
+                }
+                
+                // 显示当前标签内容并添加active类
+                document.getElementById(tabName).classList.add("active");
+                event.currentTarget.classList.add("active");
+            }
+        </script>
         
         <button class="start-button" onclick="window.location.href='/time-travel-scenario'">开始穿越</button>
     </div>
